@@ -1,47 +1,68 @@
 package server;
+
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 public class SocketServer {
-    private static final int PORT = 5000;
+    private static int PORT = 5000;
+    private ServerSocket serverSocket;
+
+    private static final Logger logger = Logger.getLogger(SocketServer.class.getName());
 
     public SocketServer() {
         // Call the parameterized constructor with the default port value of 5000
         this(PORT);
     }
 
-    public SocketServer(int port) {
-        // Constructor that sets the constant port number
-        // You can use this constructor to set a custom port if needed
+    public SocketServer(int x) {
+        if (x <= 0) {
+            throw new IllegalArgumentException("Port number must be a positive value.");
+        }
+        PORT = x;
     }
 
     public void setup() {
-        // A method that sets up the server for connection
-        // You can implement server setup logic here
+        try {
+            // Create the server socket and log server information
+            serverSocket = new ServerSocket(PORT);
+            InetAddress serverAddress = serverSocket.getInetAddress();
+
+            // Log server information
+            logger.info("Server is listening on port " + PORT);
+            logger.info("Server hostname: " + serverAddress.getHostName());
+            logger.info("Server host address: " + serverAddress.getHostAddress());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void startAcceptingRequests() {
         // A method that starts accepting client requests
         // You can implement the logic for accepting and handling client connections here
         try {
-            ServerSocket serverSocket = new ServerSocket(PORT);
-            System.out.println("Server is listening on port " + PORT);
-
-            while (true) {
+            int clientCount = 0;
+            while (clientCount < 2) {
                 Socket clientSocket = serverSocket.accept();
-                // Handle the client connection in a separate thread or method
-                // You can create a new thread or delegate to a method to handle the client
+
+                // Generate a unique username for each client, e.g., "User1", "User2"
+                String username = "User" + (clientCount + 1);
+
+                // Create a new ServerHandler instance for the client and start the thread
+                ServerHandler handler = new ServerHandler(clientSocket, username);
+                handler.start();
+
+                // Increment the client count
+                clientCount++;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     *
-     * @return
-     */
+
     public int getPort() {
         // Getter for the PORT attribute
         return PORT;

@@ -15,6 +15,7 @@ public class Response {
         this.status = status;
         this.message = message;
     }
+
     public ResponseStatus getStatus() {
         return status;
     }
@@ -22,6 +23,7 @@ public class Response {
     public String getMessage() {
         return message;
     }
+
     public void setStatus(ResponseStatus status) {
         this.status = status;
     }

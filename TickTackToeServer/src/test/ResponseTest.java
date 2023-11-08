@@ -13,7 +13,7 @@ public class ResponseTest {
 
         // Instantiate GamingResponse objects with default and parameterized constructors
         GamingResponse gamingResponse1 = new GamingResponse();
-        GamingResponse gamingResponse2 = new GamingResponse(42, true);
+        GamingResponse gamingResponse2 = new GamingResponse();
 
         // Test getters and setters for Response class
         System.out.println("Response 1 - Default Constructor");
